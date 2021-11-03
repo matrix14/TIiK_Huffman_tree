@@ -15,8 +15,8 @@ namespace TIiK_Huffman_tree
     {
         public static List<Node> findTwoSmallestPropabilities(List<Node> trees)
         {
-            Node smallest = new Node(0);
-            Node secSmallest = new Node(0);
+            Node smallest = new Node(2);
+            Node secSmallest = new Node(2);
 
             foreach (Node e in trees)
             {
@@ -36,7 +36,7 @@ namespace TIiK_Huffman_tree
 
         public static Node buildHuffmansTree(List<Node> nodes)
         {
-            List<Node> nodesCopy = new List<Node>;
+            List<Node> nodesCopy = new List<Node>();
 
             foreach(Node e in nodes)
             {
@@ -89,11 +89,11 @@ namespace TIiK_Huffman_tree
 
         public void addNode(Node addedNode)
         {
-            if (this.leftNode != null)
+            if (this.leftNode == null)
             {
                 this.leftNode = addedNode;
             }
-            else if(this.rightNode != null)
+            else if(this.rightNode == null)
             {
                 this.rightNode = addedNode;
             }
@@ -112,7 +112,7 @@ namespace TIiK_Huffman_tree
         private Dictionary<string, int> charAmount = new Dictionary<string, int>();
         private Dictionary<string, float> charPropability = new Dictionary<string, float>();
         private Dictionary<string, int> charDataSize = new Dictionary<string, int>();
-        private List<Node> trees = new List<Node>;
+        private List<Node> trees = new List<Node>();
 
         public Form1()
         {
