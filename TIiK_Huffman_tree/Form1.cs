@@ -81,8 +81,7 @@ namespace TIiK_Huffman_tree
             {
                 if(charAmount.ContainsKey(text[i].ToString())) {
                     charAmount[text[i].ToString()] += 1;
-                } else
-                {
+                } else {
                     charAmount.Add(text[i].ToString(), 1);
                 }
                 wholeCount++;
@@ -96,36 +95,24 @@ namespace TIiK_Huffman_tree
             foreach (var i in charPropability)
             {
                 if (i.Value == 0)
-                {
                     charDataSize.Add(i.Key, 0);
-                }
                 else
-                {
-                    double b = ((double)1 / (double)i.Value);
-                    double log = Math.Log(b, 2);
-                    int v = (int)Math.Ceiling(log);
-                    charDataSize.Add(i.Key, v);
-                }
+                    charDataSize.Add(i.Key, (int)Math.Ceiling(Math.Log(((double)1 / (double)i.Value), 2)));
             }
 
-            output.Text = "";
+            output.Text = String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -10}\n", "Char", "Amount", "Propability", "Data size");
             foreach (var i in charAmount) 
             {
                 if (i.Value > 0)
-                    output.Text += String.Format("Char: {0} ({1}) - amount: {2}, propability: {3}, data size: {4} \n", this.bytesToString(Encoding.UTF8.GetBytes(i.Key)), i.Key, i.Value, charPropability[i.Key], charDataSize[i.Key]);
+                    output.Text += String.Format("{0,-6} \t{1,-6} \t{2,-10} \t{3,-10} \n", "("+i.Key+")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key]);
             }
             output.Text += String.Format("Lenght of file: {0}, sum of all chars: {1}\n", text.Length, wholeCount);
 
             float messageEntropy = 0;
 
             foreach (var i in charPropability)
-            {
                 if (i.Value > 0)
-                {
                     messageEntropy += i.Value * charDataSize[i.Key];
-                }
-
-            }
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
 
