@@ -214,16 +214,14 @@ namespace TIiK_Huffman_tree
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
 
 
-            foreach (KeyValuePair<string, float> e in charPropability)
+            foreach (KeyValuePair<string, float> el in charPropability)
             {
-                trees.Add(new Node(e.Value, e.Key));
+                trees.Add(new Node(el.Value, el.Key));
             }
 
 
             Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
             output.Text += String.Format("Huffman tree root propability: {0}\n", huffamnTree.propability);
-
-
 
         }
     }
