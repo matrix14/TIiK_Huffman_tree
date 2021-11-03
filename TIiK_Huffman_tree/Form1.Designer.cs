@@ -68,7 +68,7 @@ namespace TIiK_Huffman_tree
             // 
             this.output.Location = new System.Drawing.Point(26, 88);
             this.output.Name = "output";
-            this.output.Size = new System.Drawing.Size(368, 308);
+            this.output.Size = new System.Drawing.Size(524, 308);
             this.output.TabIndex = 3;
             this.output.Text = "";
             // 
@@ -76,7 +76,7 @@ namespace TIiK_Huffman_tree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 418);
+            this.ClientSize = new System.Drawing.Size(575, 418);
             this.Controls.Add(this.output);
             this.Controls.Add(this.entropyCalc);
             this.Controls.Add(this.fileName);
