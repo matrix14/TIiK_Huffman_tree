@@ -11,12 +11,109 @@ using System.Windows.Forms;
 
 namespace TIiK_Huffman_tree
 {
+    public static class HuffmanAlgorithm
+    {
+        public static List<Node> findTwoSmallestPropabilities(List<Node> trees)
+        {
+            Node smallest = new Node(0);
+            Node secSmallest = new Node(0);
+
+            foreach (Node e in trees)
+            {
+                if (smallest.propability > e.propability)
+                {
+                    secSmallest = smallest;
+                    smallest = e;
+                }
+                else if (secSmallest.propability > e.propability)
+                {
+                    secSmallest = e;
+                }
+            }
+
+            return new List<Node> { smallest, secSmallest };
+        }
+
+        public static Node buildHuffmansTree(List<Node> nodes)
+        {
+            List<Node> nodesCopy = new List<Node>;
+
+            foreach(Node e in nodes)
+            {
+                nodesCopy.Add(new Node(e));
+            }
+
+            return buildHuffmansTreeIteration(nodesCopy)[0];
+        }
+
+        private static List<Node> buildHuffmansTreeIteration(List<Node> trees)
+        {
+            Node newTree = new Node();
+
+            List<Node> smallersNodes = findTwoSmallestPropabilities(trees);
+            newTree.addNode(smallersNodes[0]);
+            newTree.addNode(smallersNodes[1]);
+            trees.Remove(smallersNodes[0]);
+            trees.Remove(smallersNodes[1]);
+            trees.Add(newTree);
+
+            if(trees.Count == 1)
+            {
+                return trees;
+            }
+            else
+            {
+                return buildHuffmansTreeIteration(trees);
+            }
+        }
+    }
+
+    public class Node
+    {
+        public string character = null;
+        public float propability = 0;
+        public Node rightNode = null;
+        public Node leftNode = null;
+
+        public Node(float propability = 0, string character = null)
+        {
+            this.character = character;
+            this.propability = propability;
+        }
+
+        public Node(Node node)
+        {
+            this.character = node.character;
+            this.propability = node.propability;
+        }
+
+        public void addNode(Node addedNode)
+        {
+            if (this.leftNode != null)
+            {
+                this.leftNode = addedNode;
+            }
+            else if(this.rightNode != null)
+            {
+                this.rightNode = addedNode;
+            }
+            else
+            {
+                throw new Exception("Nodes already occupied");
+            }
+
+            this.propability += addedNode.propability;
+        }
+    }
+
     public partial class Form1 : Form
     {
         private String filepath = "";
         private Dictionary<string, int> charAmount = new Dictionary<string, int>();
         private Dictionary<string, float> charPropability = new Dictionary<string, float>();
         private Dictionary<string, int> charDataSize = new Dictionary<string, int>();
+        private List<Node> trees = new List<Node>;
+
         public Form1()
         {
             InitializeComponent();
@@ -115,6 +212,18 @@ namespace TIiK_Huffman_tree
                     messageEntropy += i.Value * charDataSize[i.Key];
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
+
+
+            foreach (KeyValuePair<string, float> e in charPropability)
+            {
+                trees.Add(new Node(e.Value, e.Key));
+            }
+
+
+            Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
+            output.Text += String.Format("Huffman tree root propability: {0}\n", huffamnTree.propability);
+
+
 
         }
     }
