@@ -193,6 +193,7 @@ namespace TIiK_Huffman_tree
             charAmount.Clear();
             charPropability.Clear();
             charDataSize.Clear();
+            trees.Clear();
 
             string text = File.ReadAllText(filepath, Encoding.UTF8);
 
@@ -228,11 +229,13 @@ namespace TIiK_Huffman_tree
             Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
             Dictionary<string, string> charactersCode = HuffmanAlgorithm.codeDFS(huffamnTree, "", new Dictionary<string, string>());
 
+            var charAmountSorted = from entry in charAmount orderby entry.Value descending select entry;
+
             output.Text = String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "Char", "Amount", "Propability", "Data size", "Hoffnan Code");
-            foreach (var i in charAmount) 
+            foreach (var i in charAmountSorted)
             {
                 if (i.Value > 0)
-                    output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "("+i.Key+")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key], charactersCode[i.Key]);
+                    output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "(" + i.Key + ")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key], charactersCode[i.Key]);
             }
             output.Text += String.Format("\nLenght of file: {0}, number of diefferent chars: {1}\n", text.Length, charactersCode.Count);
 
