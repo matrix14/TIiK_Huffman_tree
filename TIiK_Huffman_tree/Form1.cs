@@ -66,6 +66,29 @@ namespace TIiK_Huffman_tree
                 return buildHuffmansTreeIteration(trees);
             }
         }
+
+        public static Dictionary<string, string> codeDFS(Node node, string actualCode, Dictionary<string, string> letters)
+        {
+            if ((node.leftNode == null) && (node.rightNode == null))
+            {
+                letters.Add(node.character, actualCode);
+            }
+            else
+            {
+                if (node.leftNode.propability > node.rightNode.propability)
+                {
+                    codeDFS(node.leftNode, actualCode + "1", letters);
+                    codeDFS(node.rightNode, actualCode + "0", letters);
+                }
+                else
+                {
+                    codeDFS(node.leftNode, actualCode + "0", letters);
+                    codeDFS(node.rightNode, actualCode + "1", letters);
+                }
+            }
+
+            return letters;
+        }
     }
 
     public class Node
@@ -197,13 +220,21 @@ namespace TIiK_Huffman_tree
                     charDataSize.Add(i.Key, (int)Math.Ceiling(Math.Log(((double)1 / (double)i.Value), 2)));
             }
 
-            output.Text = String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -10}\n", "Char", "Amount", "Propability", "Data size");
+            foreach (KeyValuePair<string, float> el in charPropability)
+            {
+                trees.Add(new Node(el.Value, el.Key));
+            }
+
+            Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
+            Dictionary<string, string> charactersCode = HuffmanAlgorithm.codeDFS(huffamnTree, "", new Dictionary<string, string>());
+
+            output.Text = String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "Char", "Amount", "Propability", "Data size", "Hoffnan Code");
             foreach (var i in charAmount) 
             {
                 if (i.Value > 0)
-                    output.Text += String.Format("{0,-6} \t{1,-6} \t{2,-10} \t{3,-10} \n", "("+i.Key+")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key]);
+                    output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "("+i.Key+")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key], charactersCode[i.Key]);
             }
-            output.Text += String.Format("Lenght of file: {0}, sum of all chars: {1}\n", text.Length, wholeCount);
+            output.Text += String.Format("Lenght of file: {0}, number of diefferent chars: {1}\n", text.Length, charactersCode.Count);
 
             float messageEntropy = 0;
 
@@ -212,17 +243,7 @@ namespace TIiK_Huffman_tree
                     messageEntropy += i.Value * charDataSize[i.Key];
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
-
-
-            foreach (KeyValuePair<string, float> el in charPropability)
-            {
-                trees.Add(new Node(el.Value, el.Key));
-            }
-
-
-            Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
             output.Text += String.Format("Huffman tree root propability: {0}\n", huffamnTree.propability);
-
         }
     }
 }
