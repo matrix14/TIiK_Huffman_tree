@@ -234,7 +234,7 @@ namespace TIiK_Huffman_tree
                 if (i.Value > 0)
                     output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "("+i.Key+")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key], charactersCode[i.Key]);
             }
-            output.Text += String.Format("Lenght of file: {0}, number of diefferent chars: {1}\n", text.Length, charactersCode.Count);
+            output.Text += String.Format("\nLenght of file: {0}, number of diefferent chars: {1}\n", text.Length, charactersCode.Count);
 
             float messageEntropy = 0;
 
@@ -243,7 +243,6 @@ namespace TIiK_Huffman_tree
                     messageEntropy += i.Value * charDataSize[i.Key];
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
-            output.Text += String.Format("Huffman tree root propability: {0}\n", huffamnTree.propability);
         }
     }
 }
