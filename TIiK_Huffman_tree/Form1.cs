@@ -134,7 +134,7 @@ namespace TIiK_Huffman_tree
         private String filepath = "";
         private Dictionary<string, int> charAmount = new Dictionary<string, int>();
         private Dictionary<string, float> charPropability = new Dictionary<string, float>();
-        private Dictionary<string, int> charDataSize = new Dictionary<string, int>();
+        private Dictionary<string, float> charDataSize = new Dictionary<string, float>();
         private List<Node> trees = new List<Node>();
 
         public Form1()
@@ -218,7 +218,8 @@ namespace TIiK_Huffman_tree
                 if (i.Value == 0)
                     charDataSize.Add(i.Key, 0);
                 else
-                    charDataSize.Add(i.Key, (int)Math.Ceiling(Math.Log(((double)1 / (double)i.Value), 2)));
+                    charDataSize.Add(i.Key, (float)Math.Log(((double)1 / (double)i.Value), 2));
+                    //charDataSize.Add(i.Key, (int)Math.Ceiling(Math.Log(((double)1 / (double)i.Value), 2)));
             }
 
             foreach (KeyValuePair<string, float> el in charPropability)
