@@ -1,0 +1,101 @@
+Elementy systemu
+System AMODIT składa się z 2 podstawowych składników:
+1. Aplikacja webowa – aplikacja napisana w ASP.NET, zawiera wszystkie formularza z których
+korzysta użytkownik. Wymagania aplikacji:
+a. Serwer IIS
+b. .NET Framework 3.5
+Aplikacja webowa może być zainstalowana równocześnie na kilku serwerach
+udostępnionych poprzez load balancer.
+2. Pakiet AMODIT Apps – pakiet zawiera dwa moduły:
+a. AMODIT Asynchronous Service – usługa Windows wykonująca zadania w tle
+b. AMODIT Database Admin – narzędzie to tworzenia i aktualizowania bazy danych
+AMODIT
+Obydwa moduły wymagają .NET Framework w wersji 3.5. W przypadku instalacji na kilku
+komputerach ten pakiet powinien być zainstalowany tylko na jednym z tych
+komputerów.
+Obydwa składniki mogą być zainstalowane na jednym serwerze albo na różnych serwerach.
+Konfiguracja systemu
+System AMODIT pobiera parametry połączenia do bazy danych z rejestru Windows z klucza:
+HKEY_LOCAL_MACHINE\SOFTWARE\Datacom Software\AMOD
+W tym kluczu znajdują się następujące parametry:
+1. ConnectionStringSQLServer – connection string do bazy danych AMODIT, wartość zgodna ze
+składnią .NET, przykłady na stronie http://www.connectionstrings.com/sql-server/. Wartość
+jest ustawiana przez Database Admin w momencie tworzenia bazy danych.
+2. DatabaseType – typ silnika bazy danych wybrany przy tworzeniu bazy w Database Admin
+(dostępne wartości: SQLServer, MySQL)
+3. Organizations – w przypadku używania kilku oddzielnych baz danych podane są tutaj nazwy
+baz danych. Domyślnie pusta.
+Te wpisy w rejestrze muszą być dodane na wszystkich komputerach na których zainstalowane są
+poszczególne moduły AMODIT.
+Wszystkie inne parametry konfiguracyjne systemu przechowywane są w bazie danych AMODIT w
+tabeli Parameters.
+Dodatkowe oprogramowanie wykorzystywane przez AMODIT
+Dla pełnego działania AMODIT Asynchronous Service konieczne jest także zainstalowanie
+następujących modułów:
+1. Pakiety IFilter używane przy indeksowaniu załączników binarnych. Zalecane jest zainstalowanie
+na komputerze na którym następujących pakietów:
+a. Windows TIFF iFIlter – dostępny jako feature systemu w Windows 2008 R2 i nowszych –
+używany do indeksowania skanów
+b. Office iFilter Pack – używany do indeksowania dokumentów MS Office, dostępny do
+pobrania na stronie http://www.microsoft.com/en-us/download/details.aspx?id=17062
+c. Adobe PDF iFilter – używany do indeksowania plików PDF, dostępny do pobrania na
+stronie http://www.adobe.com/support/downloads/detail.jsp?ftpID=4025
+2. Program GhostView używany do konwertowania skanów z formatu PDF na TIFF, który następnie
+może być zindeksowany przy pomocy Windows TIFF iFilter. Program można pobrać ze strony
+AMODIT wymaga obecności dwóch plików
+z pakietu: gswin32c.exe i gsdll32.dll. Pliki powinny się znaleźć w katalogu tymczasowym – katalog
+ten jest skonfigurowany w parameterze TempSearchDir w ustawieniach systemowych AMODIT.
+Konfigurowanie mechanizmu wysyłania maili z systemu AMODIT
+Serwer SMTP wykorzystywany do wysyłania maili z systemu AMODIT konfiguruje się w Ustawieniach
+systemowych na zakładce Ogólne w sekcji Powiadomienia. Dostępne są następujące parametry:
+1. SMTPServer – nazwa lub adres serwera SMTP
+2. MailAddress – adres mailowy który będzie ustawiony w polu From wysyłanych maili
+3. WebURL – adres systemu AMODIT który będzie wstawiany w linkach zawartych w wysyłanych
+mailach
+4. SMTPUser, SMTPPassword – login i hasło użytkownika jeżeli serwer SMTP wymaga
+uwierzytelnienia
+5. SMTPUseSSL – czy połączenie do serwera SMTP powinno być szyfrowane
+6. SMTPPort – port na serwerze SMTP
+7. DeleteOlderThan – po ilu dniach system powinien kasować maile których nie udało się wysłać,
+domyślnie 1 dzień
+8. SendHeartBeat, SendErrorLog – czy wysłać statystyki wykorzystania i informacje o błędach w
+systemie do producenta
+9. LogSentEmails – czy logować w tabeli SystemLog wysłane maile
+AMODIT
+Dokumentacja utrzymaniowa
+Baza danych
+Wszystkie dane wykorzystywane w systemie AMODIT są przechowywane w bazie danych AMODIT.
+Bazę należy backupować wg. procedur przyjętych w danej organizacji.
+Pliki tymczasowe
+Poza bazą danych system zapisuje pliki tymczasowe w katalogu zdefiniowanym w parametrze
+TmpSearchDir w Ustawieniach systemowych w AMODIT. Pliki w tym katalogu są automatycznie
+kasowane po ich wykorzystaniu.
+Użytkownicy
+Logowanie do systemu AMODIT może działać w oparciu o użytkowników zdefiniowanych we własnej
+bazie danych albo o użytkowników zdefiniowanych w AD.
+W przypadku wykorzystywania użytkowników zdefiniowanych w AD obsługiwana jest tylko jedna
+domena, zdefiniowana w Ustawieniach systemowych w parametrze DomainName. Dodatkowe dane
+użytkownika (imię, nazwisko, email) są pobierane z AD przy jego dodawaniu do AMODIT. Aby włączyć
+synchronizację tych danych należy zaznaczyć opcję SynchronizeUsersWithAD w Ustawieniach
+systemowych, zakładka Ogólne, sekcja Active Directory
+Jeżeli zostanie zaznaczone SynchronizeUsersWithAD można w pozostałych parametrach ustawić
+zakres synchronizacji. Jeżeli zostaną zaznaczone opcje SynchronizeManager i SynchronizeDepartment
+to można zaznaczyć SynchronizeCompanyStrucure. W tym przypadku hierarchia departamentów w
+AMODIT zostanie ustawiona na podstawie ustawienia managera dla użytkowników w AD.
+Synchronizacja grup z AD
+System AMODIT umożliwia synchronizację członków grup z grupami w AD. Aby włączyć
+synchronizowanie grupy AMODIT z grupą AD należy wejść do edycji grupy w AMODIT i na zakładce
+Edytuj zaznaczyć opcję „Synchronizuj członków grupy z grupą AD”.
+Domyślnie grupa AMODIT jest synchronizowana z grupą AD o takiej samej nazwie co grupa w
+AMODIT. Można ustawić synchronizowanie z grupą o innej nazwie wpisując tą nazwę w polu „Nazwy
+grup AD”. W tym polu można podać kilka grup AD rozdzielonych średnikami – w takim przypadku
+zostaną dodaniu użytkownicy ze wszystkich tych grup.
+Przycisk Zsynchronizuj teraz wywoła synchronizację od razu. Domyślnie synchronizacja jest
+powtarzana raz dziennie o godzinie 23. Częstotliwość synchronizacji można zmienić w ustawieniach
+systemowych na zakładce Zadania.
+Błędy w działaniu systemu
+Wszystkie błędy wychwycone w czasie działania systemu są zapisywane w tabeli SystemLog w bazie
+AMODIT. Tabela zawiera informację o czasie wystąpienia błędu, dokładny komunikat błędu, na jakiej
+stronie wystąpił błąd (jeżeli był to błąd w aplikacji webowej), dla jakiego użytkownika. Jeżeli w
+momencie wystąpienia błędu baza danych nie jest dostępna, to błąd jest logowany w Event Log
+systemu Windows ze źródłem AMODIT.
