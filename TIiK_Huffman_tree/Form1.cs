@@ -136,8 +136,22 @@ namespace TIiK_Huffman_tree
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
 
-
             charactersCodeJSON = JsonConvert.SerializeObject(charactersCode);
+
+        }
+
+        private void saveToFile_Click(object sender, EventArgs e)
+        {
+            if (filepath.Trim().Equals("")||text.Trim().Equals(""))
+            {
+                MessageBox.Show("Nie wybrano pliku!");
+                return;
+            }
+            String directoryName = Path.GetDirectoryName(filepath);
+            String filenameNew = Path.GetFileNameWithoutExtension(fileName.Text)+"_coded.bin";
+
+            FileHandler.saveToFile(charactersCodeJSON, directoryName + "\\" + filenameNew, text, charactersCode);
+            
         }
     }
 }

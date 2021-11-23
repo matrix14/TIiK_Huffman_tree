@@ -33,6 +33,7 @@ namespace TIiK_Huffman_tree
             this.fileName = new System.Windows.Forms.Label();
             this.entropyCalc = new System.Windows.Forms.Button();
             this.output = new System.Windows.Forms.RichTextBox();
+            this.saveToFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // selectFile
@@ -72,11 +73,22 @@ namespace TIiK_Huffman_tree
             this.output.TabIndex = 3;
             this.output.Text = "";
             // 
+            // saveToFile
+            // 
+            this.saveToFile.Location = new System.Drawing.Point(132, 59);
+            this.saveToFile.Name = "saveToFile";
+            this.saveToFile.Size = new System.Drawing.Size(96, 23);
+            this.saveToFile.TabIndex = 4;
+            this.saveToFile.Text = "Save To File";
+            this.saveToFile.UseVisualStyleBackColor = true;
+            this.saveToFile.Click += new System.EventHandler(this.saveToFile_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(575, 418);
+            this.Controls.Add(this.saveToFile);
             this.Controls.Add(this.output);
             this.Controls.Add(this.entropyCalc);
             this.Controls.Add(this.fileName);
@@ -96,6 +108,7 @@ namespace TIiK_Huffman_tree
         private System.Windows.Forms.Label fileName;
         private System.Windows.Forms.Button entropyCalc;
         private System.Windows.Forms.RichTextBox output;
+        private System.Windows.Forms.Button saveToFile;
     }
 }
 

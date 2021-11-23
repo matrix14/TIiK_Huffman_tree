@@ -12,7 +12,7 @@ namespace TIiK_Huffman_tree
         public static void saveToFile(String jsonTable, String filename, String text, Dictionary<string, string> charactersCode)
         {
             FileStream fsTarget = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            fsTarget.Write(Encoding.UTF8.GetBytes(jsonTable), 0, jsonTable.Length);
+            fsTarget.Write(Encoding.UTF8.GetBytes(jsonTable), 0, Encoding.UTF8.GetBytes(jsonTable).Length);
             fsTarget.Write(new byte[4] { 0xFF, 0xFF, 0xFF, 0xFF }, 0, 4);
 
             String buf = "";
@@ -25,9 +25,10 @@ namespace TIiK_Huffman_tree
                 {
                     String oneB = buf.Substring(0, 8);
                     buf = buf.Substring(8);
-                    byte[] b = new byte[1] { 0x00 };
-                    b[0] = Encoding.ASCII.GetBytes(oneB)[0];
-                    fsTarget.Write(b, 0, 1);
+
+                    var num = Convert.ToUInt32(oneB, 2);
+                    var bytes = BitConverter.GetBytes(num);
+                    fsTarget.Write(bytes, 0, 1);
                 }
             }
             if(buf.Length>0)
@@ -35,12 +36,16 @@ namespace TIiK_Huffman_tree
                 int pad = 8 - buf.Length;
                 for(int i=0; i<pad; i++)
                     buf += "0";
-                byte[] b = new byte[1] { 0x00 };
-                b[0] = Encoding.ASCII.GetBytes(buf)[0];
-                fsTarget.Write(b, 0, 1);
+
+                var num = Convert.ToUInt32(buf, 2);
+                var bytes = BitConverter.GetBytes(num);
+
+                fsTarget.Write(bytes, 0, 1);
             }
             fsTarget.Close();
         }
+
+        public static 
 
         public static void testFunc()
         {
