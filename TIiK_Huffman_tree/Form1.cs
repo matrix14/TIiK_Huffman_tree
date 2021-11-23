@@ -11,131 +11,16 @@ using System.Windows.Forms;
 
 namespace TIiK_Huffman_tree
 {
-    public static class HuffmanAlgorithm
-    {
-        public static List<Node> findTwoSmallestPropabilities(List<Node> trees)
-        {
-            Node smallest = new Node(2);
-            Node secSmallest = new Node(2);
-
-            foreach (Node e in trees)
-            {
-                if (smallest.propability > e.propability)
-                {
-                    secSmallest = smallest;
-                    smallest = e;
-                }
-                else if (secSmallest.propability > e.propability)
-                {
-                    secSmallest = e;
-                }
-            }
-
-            return new List<Node> { smallest, secSmallest };
-        }
-
-        public static Node buildHuffmansTree(List<Node> nodes)
-        {
-            List<Node> nodesCopy = new List<Node>();
-
-            foreach(Node e in nodes)
-            {
-                nodesCopy.Add(new Node(e));
-            }
-
-            return buildHuffmansTreeIteration(nodesCopy)[0];
-        }
-
-        private static List<Node> buildHuffmansTreeIteration(List<Node> trees)
-        {
-            Node newTree = new Node();
-
-            List<Node> smallersNodes = findTwoSmallestPropabilities(trees);
-            newTree.addNode(smallersNodes[0]);
-            newTree.addNode(smallersNodes[1]);
-            trees.Remove(smallersNodes[0]);
-            trees.Remove(smallersNodes[1]);
-            trees.Add(newTree);
-
-            if(trees.Count == 1)
-            {
-                return trees;
-            }
-            else
-            {
-                return buildHuffmansTreeIteration(trees);
-            }
-        }
-
-        public static Dictionary<string, string> codeDFS(Node node, string actualCode, Dictionary<string, string> letters)
-        {
-            if ((node.leftNode == null) && (node.rightNode == null))
-            {
-                letters.Add(node.character, actualCode);
-            }
-            else
-            {
-                if (node.leftNode.propability > node.rightNode.propability)
-                {
-                    codeDFS(node.leftNode, actualCode + "1", letters);
-                    codeDFS(node.rightNode, actualCode + "0", letters);
-                }
-                else
-                {
-                    codeDFS(node.leftNode, actualCode + "0", letters);
-                    codeDFS(node.rightNode, actualCode + "1", letters);
-                }
-            }
-
-            return letters;
-        }
-    }
-
-    public class Node
-    {
-        public string character = null;
-        public float propability = 0;
-        public Node rightNode = null;
-        public Node leftNode = null;
-
-        public Node(float propability = 0, string character = null)
-        {
-            this.character = character;
-            this.propability = propability;
-        }
-
-        public Node(Node node)
-        {
-            this.character = node.character;
-            this.propability = node.propability;
-        }
-
-        public void addNode(Node addedNode)
-        {
-            if (this.leftNode == null)
-            {
-                this.leftNode = addedNode;
-            }
-            else if(this.rightNode == null)
-            {
-                this.rightNode = addedNode;
-            }
-            else
-            {
-                throw new Exception("Nodes already occupied");
-            }
-
-            this.propability += addedNode.propability;
-        }
-    }
-
     public partial class Form1 : Form
     {
         private String filepath = "";
         private Dictionary<string, int> charAmount = new Dictionary<string, int>();
         private Dictionary<string, float> charPropability = new Dictionary<string, float>();
         private Dictionary<string, float> charDataSize = new Dictionary<string, float>();
-        private List<Node> trees = new List<Node>();
+        private List<HuffmanAlgorithm.Node> trees = new List<HuffmanAlgorithm.Node>();
+
+        private string text;
+        private Dictionary<string, string> charactersCode;
 
         public Form1()
         {
@@ -195,7 +80,7 @@ namespace TIiK_Huffman_tree
             charDataSize.Clear();
             trees.Clear();
 
-            string text = File.ReadAllText(filepath, Encoding.UTF8);
+            text = File.ReadAllText(filepath, Encoding.UTF8);
 
             int wholeCount = 0;
             for (int i = 0; i < text.Length; i++)
@@ -224,11 +109,11 @@ namespace TIiK_Huffman_tree
 
             foreach (KeyValuePair<string, float> el in charPropability)
             {
-                trees.Add(new Node(el.Value, el.Key));
+                trees.Add(new HuffmanAlgorithm.Node(el.Value, el.Key));
             }
 
-            Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
-            Dictionary<string, string> charactersCode = HuffmanAlgorithm.codeDFS(huffamnTree, "", new Dictionary<string, string>());
+            HuffmanAlgorithm.Node huffamnTree = HuffmanAlgorithm.buildHuffmansTree(trees);
+            charactersCode = HuffmanAlgorithm.codeDFS(huffamnTree, "", new Dictionary<string, string>());
 
             var charAmountSorted = from entry in charAmount orderby entry.Value descending select entry;
 
@@ -248,5 +133,7 @@ namespace TIiK_Huffman_tree
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
         }
+
+
     }
 }
