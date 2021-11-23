@@ -46,8 +46,8 @@ namespace TIiK_Huffman_tree
                 CheckPathExists = true,
 
                 DefaultExt = "txt",
-                Filter = "txt files (*.txt)|*.txt",
-                FilterIndex = 2,
+                Filter = "txt files (*.txt)|*.txt|bin files (*.bin)|*.bin",
+                FilterIndex = 1,
                 RestoreDirectory = true,
 
                 ReadOnlyChecked = true,
@@ -154,6 +154,11 @@ namespace TIiK_Huffman_tree
 
             FileHandler.saveToFile(charactersCodeJSON, directoryName + "\\" + filenameNew, text, charactersCode);
             
+        }
+
+        private void openCoded_button_Click(object sender, EventArgs e)
+        {
+            FileHandler.openFromFile(filepath);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TIiK_Huffman_tree
 {
-    class FileHandler
+    public static class FileHandler
     {
         public static void saveToFile(String jsonTable, String filename, String text, Dictionary<string, string> charactersCode)
         {
@@ -40,9 +41,29 @@ namespace TIiK_Huffman_tree
                 var num = Convert.ToUInt32(buf, 2);
                 var bytes = BitConverter.GetBytes(num);
 
-                fsTarget.Write(bytes, 0, 1);
+                int bLen = 1;
+                if (bytes[1] != 0x00)
+                    bLen = 2;
+                if (bytes[2] != 0x00)
+                    bLen = 3;
+                if (bytes[3] != 0x00)
+                    bLen = 4;
+
+                fsTarget.Write(bytes, 0, bLen);
             }
             fsTarget.Close();
+        }
+        public static Dictionary<TValue,TKey> Reverse<TKey,TValue>(this IDictionary<TKey,TValue> src)
+        {
+            var dict = new Dictionary<TValue,TKey>();
+            foreach (var ent in src)
+            {
+                if (!dict.ContainsKey(ent.Value))
+                {
+                    dict.Add(ent.Value, ent.Key);
+                }
+            }
+            return dict;
         }
 
         public static void openFromFile(String inputFile)
@@ -50,6 +71,12 @@ namespace TIiK_Huffman_tree
             if (!File.Exists(inputFile))
                 return;
             FileStream fsInput = new FileStream(inputFile, FileMode.Open, FileAccess.Read);
+
+            String directoryName = Path.GetDirectoryName(inputFile);
+            String filenameNew = Path.GetFileNameWithoutExtension(Path.GetFileName(inputFile)) + "_decoded.txt";
+
+            FileStream fsOutput = new FileStream(directoryName + "\\" + filenameNew, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+
 
             bool foundMagic = false;
             long magicPosition = 0;
@@ -80,15 +107,60 @@ namespace TIiK_Huffman_tree
                 }
             } while ((int)b != -1);
 
+            if (!foundMagic)
+                return;
+
             fsInput.Seek(0, SeekOrigin.Begin);
             byte[] tempBuf = new byte[magicPosition];
             fsInput.Read(tempBuf, 0, (int)magicPosition);
 
             String jsonText = Encoding.UTF8.GetString(tempBuf);
+            Dictionary<string, string> charactersCode = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+
+            var charactersCodeRev = charactersCode.ToDictionary(x => x.Value, x => x.Key);
+
+            int shortestCode = 100;
+            int longestCode = 0;
+            foreach(var s in charactersCode)
+            {
+                if (shortestCode > s.Value.Length)
+                    shortestCode = s.Value.Length;
+
+                if (longestCode < s.Value.Length)
+                    longestCode = s.Value.Length;
+            }
 
             fsInput.Seek(magicPosition+4, SeekOrigin.Begin);
 
-            //foreach
+            String buffer = "";
+            int c;
+            do
+            {
+                c = fsInput.ReadByte();
+
+                String temp = Convert.ToString(c, 2);
+                if(temp.Length<8)
+                {
+                    while(temp.Length<8)
+                        temp = temp.Insert(0, "0");
+                }
+
+                buffer += temp;
+                for(int i=shortestCode; i<=longestCode; i++)
+                {
+                    if (buffer.Length < i)
+                        break;
+                    String act = buffer.Substring(0, i);
+                    if(charactersCodeRev.ContainsKey(act)) {
+                        buffer = buffer.Substring(i);
+                        fsOutput.Write(Encoding.UTF8.GetBytes(charactersCodeRev[act]), 0, Encoding.UTF8.GetBytes(charactersCodeRev[act]).Length);
+                    }
+                }
+
+            } while ((int)c != -1);
+
+            fsInput.Close();
+            fsOutput.Close();
         }
 
         public static void testFunc()

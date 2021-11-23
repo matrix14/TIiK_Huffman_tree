@@ -34,6 +34,7 @@ namespace TIiK_Huffman_tree
             this.entropyCalc = new System.Windows.Forms.Button();
             this.output = new System.Windows.Forms.RichTextBox();
             this.saveToFile = new System.Windows.Forms.Button();
+            this.openCoded_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // selectFile
@@ -83,11 +84,22 @@ namespace TIiK_Huffman_tree
             this.saveToFile.UseVisualStyleBackColor = true;
             this.saveToFile.Click += new System.EventHandler(this.saveToFile_Click);
             // 
+            // openCoded_button
+            // 
+            this.openCoded_button.Location = new System.Drawing.Point(234, 59);
+            this.openCoded_button.Name = "openCoded_button";
+            this.openCoded_button.Size = new System.Drawing.Size(98, 23);
+            this.openCoded_button.TabIndex = 5;
+            this.openCoded_button.Text = "Open Coded File";
+            this.openCoded_button.UseVisualStyleBackColor = true;
+            this.openCoded_button.Click += new System.EventHandler(this.openCoded_button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(575, 418);
+            this.Controls.Add(this.openCoded_button);
             this.Controls.Add(this.saveToFile);
             this.Controls.Add(this.output);
             this.Controls.Add(this.entropyCalc);
@@ -109,6 +121,7 @@ namespace TIiK_Huffman_tree
         private System.Windows.Forms.Button entropyCalc;
         private System.Windows.Forms.RichTextBox output;
         private System.Windows.Forms.Button saveToFile;
+        private System.Windows.Forms.Button openCoded_button;
     }
 }
 
