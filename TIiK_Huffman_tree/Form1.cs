@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Newtonsoft.Json;
+
 namespace TIiK_Huffman_tree
 {
     public partial class Form1 : Form
@@ -21,6 +23,7 @@ namespace TIiK_Huffman_tree
 
         private string text;
         private Dictionary<string, string> charactersCode;
+        private string charactersCodeJSON;
 
         public Form1()
         {
@@ -132,8 +135,9 @@ namespace TIiK_Huffman_tree
                     messageEntropy += i.Value * charDataSize[i.Key];
 
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
+
+
+            charactersCodeJSON = JsonConvert.SerializeObject(charactersCode);
         }
-
-
     }
 }
