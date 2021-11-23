@@ -138,6 +138,8 @@ namespace TIiK_Huffman_tree
 
             charactersCodeJSON = JsonConvert.SerializeObject(charactersCode);
 
+            //Dictionary<string, string> deserialized = (Dictionary<string, string>)JsonConvert.DeserializeObject(charactersCodeJSON);
+            Dictionary<string, string> weatherForecast = JsonConvert.DeserializeObject<Dictionary<string, string>>(charactersCodeJSON); //dictionary from string //dev
         }
 
         private void saveToFile_Click(object sender, EventArgs e)
