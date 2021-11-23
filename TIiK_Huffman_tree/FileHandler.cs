@@ -45,7 +45,51 @@ namespace TIiK_Huffman_tree
             fsTarget.Close();
         }
 
-        public static 
+        public static void openFromFile(String inputFile)
+        {
+            if (!File.Exists(inputFile))
+                return;
+            FileStream fsInput = new FileStream(inputFile, FileMode.Open, FileAccess.Read);
+
+            bool foundMagic = false;
+            long magicPosition = 0;
+            int b;
+            do
+            {
+                b = fsInput.ReadByte();
+                if (b == -1)
+                    break;
+                if (b == 0xFF)
+                {
+                    b = fsInput.ReadByte();
+                    if (b == 0xFF)
+                    {
+                        b = fsInput.ReadByte();
+                        if (b == 0xFF)
+                        {
+                            b = fsInput.ReadByte();
+                            if (b == 0xFF)
+                            {
+                                foundMagic = true;
+                                magicPosition = fsInput.Position;
+                                magicPosition -= 4;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } while ((int)b != -1);
+
+            fsInput.Seek(0, SeekOrigin.Begin);
+            byte[] tempBuf = new byte[magicPosition];
+            fsInput.Read(tempBuf, 0, (int)magicPosition);
+
+            String jsonText = Encoding.UTF8.GetString(tempBuf);
+
+            fsInput.Seek(magicPosition+4, SeekOrigin.Begin);
+
+            //foreach
+        }
 
         public static void testFunc()
         {
