@@ -17,20 +17,33 @@ namespace TIiK_Huffman_tree
             fsTarget.Write(new byte[4] { 0xFF, 0xFF, 0xFF, 0xFF }, 0, 4);
 
             String buf = "";
+            int abc = 0;
             foreach(char c in text)
             {
                 buf += charactersCode[c.ToString()];
-                if(buf.Length<8)
-                    continue;
-                else
+                do
                 {
-                    String oneB = buf.Substring(0, 8);
-                    buf = buf.Substring(8);
+                    if (buf.Length < 8)
+                        continue;
+                    else
+                    {
+                        String oneB = buf.Substring(0, 8);
+                        buf = buf.Substring(8);
 
-                    var num = Convert.ToUInt32(oneB, 2);
-                    var bytes = BitConverter.GetBytes(num);
-                    fsTarget.Write(bytes, 0, 1);
-                }
+                        var num = Convert.ToUInt32(oneB, 2);
+                        var bytes = BitConverter.GetBytes(num);
+
+                        int bLen = 1;
+                        if (bytes[1] != 0x00)
+                            bLen = 2;
+                        if (bytes[2] != 0x00)
+                            bLen = 3;
+                        if (bytes[3] != 0x00)
+                            bLen = 4;
+
+                        fsTarget.Write(bytes, 0, bLen);
+                    }
+                } while (buf.Length >= 8);
             }
             if(buf.Length>0)
             {
@@ -132,30 +145,55 @@ namespace TIiK_Huffman_tree
 
             fsInput.Seek(magicPosition+4, SeekOrigin.Begin);
 
+            String cBef = "";
+            String cBefBef = "";
+
             String buffer = "";
-            int c;
+            int c = 0;
             do
             {
+                
                 c = fsInput.ReadByte();
+
+                if (c == -1)
+                    break;
 
                 String temp = Convert.ToString(c, 2);
                 if(temp.Length<8)
-                {
                     while(temp.Length<8)
                         temp = temp.Insert(0, "0");
-                }
 
                 buffer += temp;
-                for(int i=shortestCode; i<=longestCode; i++)
+                bool doAgain = false;
+                do
                 {
-                    if (buffer.Length < i)
+                    if((fsInput.Position>=fsInput.Length)&&(buffer.IndexOfAny(new char[] { '1' }) == -1))
+                    {
                         break;
-                    String act = buffer.Substring(0, i);
-                    if(charactersCodeRev.ContainsKey(act)) {
-                        buffer = buffer.Substring(i);
-                        fsOutput.Write(Encoding.UTF8.GetBytes(charactersCodeRev[act]), 0, Encoding.UTF8.GetBytes(charactersCodeRev[act]).Length);
                     }
-                }
+                    doAgain = false;
+                    for (int i = shortestCode; i <= longestCode; i++)
+                    {
+                        if (buffer.Length < i)
+                            break;
+                        String act = buffer.Substring(0, i);
+                        if (charactersCodeRev.ContainsKey(act))
+                        {
+                            buffer = buffer.Substring(i);
+                            cBefBef = cBef;
+                            cBef = charactersCodeRev[act];
+
+                            if (cBefBef.Equals("9") && cBef.Equals("9"))
+                            {
+                                Int32 asdkjadkj = 0;
+                            }
+                                
+                            fsOutput.Write(Encoding.UTF8.GetBytes(charactersCodeRev[act]), 0, Encoding.UTF8.GetBytes(charactersCodeRev[act]).Length);//ad break
+                            doAgain = true;
+                            break;
+                        }
+                    }
+                } while (doAgain == true);
 
             } while ((int)c != -1);
 

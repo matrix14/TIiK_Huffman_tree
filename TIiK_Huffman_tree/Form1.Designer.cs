@@ -90,7 +90,7 @@ namespace TIiK_Huffman_tree
             this.openCoded_button.Name = "openCoded_button";
             this.openCoded_button.Size = new System.Drawing.Size(98, 23);
             this.openCoded_button.TabIndex = 5;
-            this.openCoded_button.Text = "Open Coded File";
+            this.openCoded_button.Text = "Decode File";
             this.openCoded_button.UseVisualStyleBackColor = true;
             this.openCoded_button.Click += new System.EventHandler(this.openCoded_button_Click);
             // 
