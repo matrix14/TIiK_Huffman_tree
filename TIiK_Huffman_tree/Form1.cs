@@ -8,8 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 using Newtonsoft.Json;
+
 
 namespace TIiK_Huffman_tree
 {
@@ -24,6 +26,9 @@ namespace TIiK_Huffman_tree
         private string text;
         private Dictionary<string, string> charactersCode;
         private string charactersCodeJSON;
+
+        Stopwatch sw = new Stopwatch();
+
 
         public Form1()
         {
@@ -138,12 +143,19 @@ namespace TIiK_Huffman_tree
 
             charactersCodeJSON = JsonConvert.SerializeObject(charactersCode);
 
-            //Dictionary<string, string> deserialized = (Dictionary<string, string>)JsonConvert.DeserializeObject(charactersCodeJSON);
-            Dictionary<string, string> weatherForecast = JsonConvert.DeserializeObject<Dictionary<string, string>>(charactersCodeJSON); //dictionary from string //dev
         }
 
         private void saveToFile_Click(object sender, EventArgs e)
         {
+            sw.Reset();
+            sw.Start();
+
+            if (text is null)
+            {
+                MessageBox.Show("Nie stworzono kodu dla danego pliku!");
+                return;
+            }
+
             if (filepath.Trim().Equals("")||text.Trim().Equals(""))
             {
                 MessageBox.Show("Nie wybrano pliku!");
@@ -153,12 +165,24 @@ namespace TIiK_Huffman_tree
             String filenameNew = Path.GetFileNameWithoutExtension(fileName.Text)+"_coded.bin";
 
             FileHandler.saveToFile(charactersCodeJSON, directoryName + "\\" + filenameNew, text, charactersCode);
+
             
+
+            sw.Stop();
+
+            output.Text += String.Format("Compressed text in: {0} ms\n", sw.Elapsed.TotalMilliseconds);
+
         }
 
         private void openCoded_button_Click(object sender, EventArgs e)
         {
+            sw.Reset();
+            sw.Start();
+
             FileHandler.openFromFile(filepath);
+
+            sw.Stop();
+            output.Text += String.Format("Decoded in: {0} ms\n", sw.Elapsed.TotalMilliseconds);
         }
     }
 }
