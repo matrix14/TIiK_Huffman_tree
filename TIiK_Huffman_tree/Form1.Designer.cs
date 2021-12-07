@@ -31,10 +31,11 @@ namespace TIiK_Huffman_tree
         {
             this.selectFile = new System.Windows.Forms.Button();
             this.fileName = new System.Windows.Forms.Label();
-            this.entropyCalc = new System.Windows.Forms.Button();
             this.output = new System.Windows.Forms.RichTextBox();
             this.saveToFile = new System.Windows.Forms.Button();
             this.openCoded_button = new System.Windows.Forms.Button();
+            this.showCode = new System.Windows.Forms.CheckBox();
+            this.clearConsole = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // selectFile
@@ -55,17 +56,6 @@ namespace TIiK_Huffman_tree
             this.fileName.Size = new System.Drawing.Size(0, 13);
             this.fileName.TabIndex = 1;
             // 
-            // entropyCalc
-            // 
-            this.entropyCalc.Enabled = false;
-            this.entropyCalc.Location = new System.Drawing.Point(26, 59);
-            this.entropyCalc.Name = "entropyCalc";
-            this.entropyCalc.Size = new System.Drawing.Size(99, 23);
-            this.entropyCalc.TabIndex = 2;
-            this.entropyCalc.Text = "Calculate Entropy";
-            this.entropyCalc.UseVisualStyleBackColor = true;
-            this.entropyCalc.Click += new System.EventHandler(this.entropyCalc_Click);
-            // 
             // output
             // 
             this.output.Location = new System.Drawing.Point(26, 88);
@@ -76,17 +66,17 @@ namespace TIiK_Huffman_tree
             // 
             // saveToFile
             // 
-            this.saveToFile.Location = new System.Drawing.Point(132, 59);
+            this.saveToFile.Location = new System.Drawing.Point(26, 59);
             this.saveToFile.Name = "saveToFile";
-            this.saveToFile.Size = new System.Drawing.Size(96, 23);
+            this.saveToFile.Size = new System.Drawing.Size(99, 23);
             this.saveToFile.TabIndex = 4;
-            this.saveToFile.Text = "Save To File";
+            this.saveToFile.Text = "Encode File";
             this.saveToFile.UseVisualStyleBackColor = true;
             this.saveToFile.Click += new System.EventHandler(this.saveToFile_Click);
             // 
             // openCoded_button
             // 
-            this.openCoded_button.Location = new System.Drawing.Point(234, 59);
+            this.openCoded_button.Location = new System.Drawing.Point(134, 59);
             this.openCoded_button.Name = "openCoded_button";
             this.openCoded_button.Size = new System.Drawing.Size(98, 23);
             this.openCoded_button.TabIndex = 5;
@@ -94,15 +84,36 @@ namespace TIiK_Huffman_tree
             this.openCoded_button.UseVisualStyleBackColor = true;
             this.openCoded_button.Click += new System.EventHandler(this.openCoded_button_Click);
             // 
+            // showCode
+            // 
+            this.showCode.AutoSize = true;
+            this.showCode.Location = new System.Drawing.Point(238, 63);
+            this.showCode.Name = "showCode";
+            this.showCode.Size = new System.Drawing.Size(85, 17);
+            this.showCode.TabIndex = 6;
+            this.showCode.Text = "Show codes";
+            this.showCode.UseVisualStyleBackColor = true;
+            // 
+            // clearConsole
+            // 
+            this.clearConsole.Location = new System.Drawing.Point(452, 57);
+            this.clearConsole.Name = "clearConsole";
+            this.clearConsole.Size = new System.Drawing.Size(98, 23);
+            this.clearConsole.TabIndex = 7;
+            this.clearConsole.Text = "Clear Log";
+            this.clearConsole.UseVisualStyleBackColor = true;
+            this.clearConsole.Click += new System.EventHandler(this.clearConsole_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(575, 418);
+            this.Controls.Add(this.clearConsole);
+            this.Controls.Add(this.showCode);
             this.Controls.Add(this.openCoded_button);
             this.Controls.Add(this.saveToFile);
             this.Controls.Add(this.output);
-            this.Controls.Add(this.entropyCalc);
             this.Controls.Add(this.fileName);
             this.Controls.Add(this.selectFile);
             this.Name = "Form1";
@@ -118,10 +129,11 @@ namespace TIiK_Huffman_tree
         //private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button selectFile;
         private System.Windows.Forms.Label fileName;
-        private System.Windows.Forms.Button entropyCalc;
         private System.Windows.Forms.RichTextBox output;
         private System.Windows.Forms.Button saveToFile;
         private System.Windows.Forms.Button openCoded_button;
+        private System.Windows.Forms.CheckBox showCode;
+        private System.Windows.Forms.Button clearConsole;
     }
 }
 

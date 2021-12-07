@@ -51,7 +51,7 @@ namespace TIiK_Huffman_tree
                 CheckPathExists = true,
 
                 DefaultExt = "txt",
-                Filter = "txt files (*.txt)|*.txt|bin files (*.bin)|*.bin",
+                Filter = "txt/bin files|*.txt;*.bin|txt files|*.txt|bin files|*.bin",
                 FilterIndex = 1,
                 RestoreDirectory = true,
 
@@ -63,7 +63,7 @@ namespace TIiK_Huffman_tree
             {
                 fileName.Text = openFileDialog1.SafeFileName;
                 filepath = openFileDialog1.FileName;
-                this.entropyCalc.Enabled = true;
+                //this.entropyCalc.Enabled = true;
             }
         }
         private string bytesToString(byte[] bytes)
@@ -77,6 +77,14 @@ namespace TIiK_Huffman_tree
 
         private void entropyCalc_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void saveToFile_Click(object sender, EventArgs e)
+        {
+            sw.Reset();
+            sw.Start();
+
             if (filepath.Trim().Equals(""))
             {
                 MessageBox.Show("Nie wybrano pliku!");
@@ -93,9 +101,12 @@ namespace TIiK_Huffman_tree
             int wholeCount = 0;
             for (int i = 0; i < text.Length; i++)
             {
-                if(charAmount.ContainsKey(text[i].ToString())) {
+                if (charAmount.ContainsKey(text[i].ToString()))
+                {
                     charAmount[text[i].ToString()] += 1;
-                } else {
+                }
+                else
+                {
                     charAmount.Add(text[i].ToString(), 1);
                 }
                 wholeCount++;
@@ -112,7 +123,7 @@ namespace TIiK_Huffman_tree
                     charDataSize.Add(i.Key, 0);
                 else
                     charDataSize.Add(i.Key, (float)Math.Log(((double)1 / (double)i.Value), 2));
-                    //charDataSize.Add(i.Key, (int)Math.Ceiling(Math.Log(((double)1 / (double)i.Value), 2)));
+                //charDataSize.Add(i.Key, (int)Math.Ceiling(Math.Log(((double)1 / (double)i.Value), 2)));
             }
 
             foreach (KeyValuePair<string, float> el in charPropability)
@@ -125,13 +136,16 @@ namespace TIiK_Huffman_tree
 
             var charAmountSorted = from entry in charAmount orderby entry.Value descending select entry;
 
-            output.Text = String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "Char", "Amount", "Propability", "Data size", "Hoffnan Code");
-            foreach (var i in charAmountSorted)
+            if (showCode.Checked)
             {
-                if (i.Value > 0)
-                    output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "(" + i.Key + ")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key], charactersCode[i.Key]);
+                output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "Char", "Amount", "Propability", "Data size", "Hoffnan Code");
+                foreach (var i in charAmountSorted)
+                {
+                    if (i.Value > 0)
+                        output.Text += String.Format("{0,-6} \t{1,-6} \t{2, -10} \t{3, -15} \t{4,-10}\n", "(" + i.Key + ")", i.Value, Math.Round(charPropability[i.Key], 6), charDataSize[i.Key], charactersCode[i.Key]);
+                }
+                output.Text += String.Format("\nLenght of file: {0}, number of diefferent chars: {1}\n", text.Length, charactersCode.Count);
             }
-            output.Text += String.Format("\nLenght of file: {0}, number of diefferent chars: {1}\n", text.Length, charactersCode.Count);
 
             float messageEntropy = 0;
 
@@ -139,16 +153,9 @@ namespace TIiK_Huffman_tree
                 if (i.Value > 0)
                     messageEntropy += i.Value * charDataSize[i.Key];
 
-            output.Text += String.Format("Entropy: {0}\n", messageEntropy);
+            
 
             charactersCodeJSON = JsonConvert.SerializeObject(charactersCode);
-
-        }
-
-        private void saveToFile_Click(object sender, EventArgs e)
-        {
-            sw.Reset();
-            sw.Start();
 
             if (text is null)
             {
@@ -169,7 +176,7 @@ namespace TIiK_Huffman_tree
             
 
             sw.Stop();
-
+            output.Text += String.Format("Entropy: {0}\n", messageEntropy);
             output.Text += String.Format("Compressed text in: {0} ms\n", sw.Elapsed.TotalMilliseconds);
 
         }
@@ -183,6 +190,11 @@ namespace TIiK_Huffman_tree
 
             sw.Stop();
             output.Text += String.Format("Decoded in: {0} ms\n", sw.Elapsed.TotalMilliseconds);
+        }
+
+        private void clearConsole_Click(object sender, EventArgs e)
+        {
+            output.Text = "";
         }
     }
 }
