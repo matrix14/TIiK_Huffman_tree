@@ -153,7 +153,7 @@ namespace TIiK_Huffman_tree
                 if (i.Value > 0)
                     messageEntropy += i.Value * charDataSize[i.Key];
 
-            
+            //TODO: if JSON
 
             charactersCodeJSON = JsonConvert.SerializeObject(charactersCode);
 
@@ -171,9 +171,11 @@ namespace TIiK_Huffman_tree
             String directoryName = Path.GetDirectoryName(filepath);
             String filenameNew = Path.GetFileNameWithoutExtension(fileName.Text)+"_coded.bin";
 
-            FileHandler.saveToFile(charactersCodeJSON, directoryName + "\\" + filenameNew, text, charactersCode);
+            if(JSONTable.Checked)
+                FileHandler.saveToFile(charactersCodeJSON, directoryName + "\\" + filenameNew, text, charactersCode);
+            else
+                FileHandler.saveToFileNoJSON(directoryName + "\\" + filenameNew, text, charactersCode);
 
-            
 
             sw.Stop();
             output.Text += String.Format("Entropy: {0}\n", messageEntropy);
@@ -186,7 +188,7 @@ namespace TIiK_Huffman_tree
             sw.Reset();
             sw.Start();
 
-            FileHandler.openFromFile(filepath);
+            FileHandler.openFromFile(filepath, JSONTable.Checked);
 
             sw.Stop();
             output.Text += String.Format("Decoded in: {0} ms\n", sw.Elapsed.TotalMilliseconds);

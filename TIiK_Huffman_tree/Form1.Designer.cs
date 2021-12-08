@@ -36,6 +36,7 @@ namespace TIiK_Huffman_tree
             this.openCoded_button = new System.Windows.Forms.Button();
             this.showCode = new System.Windows.Forms.CheckBox();
             this.clearConsole = new System.Windows.Forms.Button();
+            this.JSONTable = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // selectFile
@@ -104,11 +105,22 @@ namespace TIiK_Huffman_tree
             this.clearConsole.UseVisualStyleBackColor = true;
             this.clearConsole.Click += new System.EventHandler(this.clearConsole_Click);
             // 
+            // JSONTable
+            // 
+            this.JSONTable.AutoSize = true;
+            this.JSONTable.Location = new System.Drawing.Point(329, 63);
+            this.JSONTable.Name = "JSONTable";
+            this.JSONTable.Size = new System.Drawing.Size(84, 17);
+            this.JSONTable.TabIndex = 8;
+            this.JSONTable.Text = "JSON Table";
+            this.JSONTable.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(575, 418);
+            this.Controls.Add(this.JSONTable);
             this.Controls.Add(this.clearConsole);
             this.Controls.Add(this.showCode);
             this.Controls.Add(this.openCoded_button);
@@ -134,6 +146,7 @@ namespace TIiK_Huffman_tree
         private System.Windows.Forms.Button openCoded_button;
         private System.Windows.Forms.CheckBox showCode;
         private System.Windows.Forms.Button clearConsole;
+        private System.Windows.Forms.CheckBox JSONTable;
     }
 }
 
